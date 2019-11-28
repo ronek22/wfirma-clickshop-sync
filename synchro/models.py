@@ -1,0 +1,36 @@
+from django.db import models
+from django.urls import reverse
+
+class City(models.Model):
+    name = models.CharField(max_length=64, unique=True)
+    temperature = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    icon = models.CharField(max_length=64, null=True, blank=True)
+    country = models.CharField(max_length=2, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+class Product(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=50)
+    available = models.FloatField()
+    modified = models.DateTimeField(null=True, blank=True)
+    enabled = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.name} | {self.code}"
+
+class Shop(models.Model):
+    url = models.URLField()
+    username = models.CharField(max_length=64)
+    password = models.CharField(max_length=64)
+    access_token = models.CharField(max_length=200, null=True)
+    expires_in = models.DateTimeField(null=True)
+
+    def get_absolute_url(self):
+        return reverse("shop-detail", kwargs={"pk": self.pk})
+    
+    def __str__(self):
+        return self.url
+    

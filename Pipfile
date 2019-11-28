@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+django = ">=2.1"
+celery = "*"
+django-redis = "*"
+redis = "*"
+requests = "*"
+django-tables2 = "*"
+django-bootstrap4 = "*"
+django-filter = "*"
+django-celery-beat = "*"
+
+[requires]
+python_version = "3.7"

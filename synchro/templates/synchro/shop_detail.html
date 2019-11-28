@@ -1,0 +1,22 @@
+{% extends 'base2.html' %}
+
+{% load bootstrap4 %}
+{% block content %}
+
+    <h2><strong>Shop:</strong> {{shop.url}}</h2><hr>
+    <p><strong>Login of user that consume API:</strong> {{shop.username}}</p>
+    <p><strong>Expiration date of token:</strong> {{shop.expires_in}}</p><hr>
+    <div class="row">
+        <div class="col-md-10">
+                <a href="/settings" class='btn btn-primary'>Cofnij</a>
+
+        </div>
+        <div class="col-md-2">
+                <a href="/shop/{{shop.id}}/delete" class='btn btn-danger' onclick="return confirm('Jesteś pewny?')">Usuń sklep</a>
+
+        </div>
+    </div>
+
+
+
+{% endblock %}

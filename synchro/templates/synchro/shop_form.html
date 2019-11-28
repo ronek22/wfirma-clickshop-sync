@@ -1,0 +1,17 @@
+{% extends 'base2.html' %}
+
+{% load bootstrap4 %}
+{% block content %}
+
+
+    <h2>Dodaj sklep do synchronizacji</h2>
+    <hr>
+
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% bootstrap_button 'Dodaj sklep' %}
+    </form> 
+
+
+{% endblock %}

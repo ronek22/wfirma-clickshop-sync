@@ -1,0 +1,33 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    {% comment %} <link rel="stylesheet" href="{% static 'ticket/static/css/screen.css' %}" /> {% endcomment %}
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+            <div>
+                <div class="navbar-item">Sample Weather App</div>
+            </div>
+        </nav>
+        <div class="columns">
+          <div class="column">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                    {{ message }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+          </li{%>
+        </div>
+    </div>
+    {% block content %}{% endblock %}
+</body>
+</html>

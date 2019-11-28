@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    # env_file: .env
+    depends_on:
+      - redis
+    command: python manage.py runserver 0.0.0.0:8000
+
+  redis:
+    image: redis:latest
+  
+  celeryworker:
+    <<: *django
+    ports: []
+    command: celery -A synchro worker -l INFO
+
+  celerybeat:
+    <<: *django
+    ports: []
+    command: celery -A synchro beat -l INFO

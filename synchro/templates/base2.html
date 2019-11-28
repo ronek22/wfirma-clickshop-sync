@@ -1,0 +1,55 @@
+<html>
+
+
+{% load bootstrap4 %}
+
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{% bootstrap_messages %}
+{% load static %}
+
+<head>
+    <style>
+        tr[data-enabled='True'] {
+            color: green;
+        }
+
+        tr[data-enabled='False'] {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark pt-3 pb-3 mb-5">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">Integrator Sklepu</span>
+
+            <div class="collapse navbar-collapse" id="basicExampleNav">
+
+                <!-- Links -->
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/settings">Ustawienia</a>
+                    </li>
+
+                </ul>
+                <!-- Links -->
+
+
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+
+</html>

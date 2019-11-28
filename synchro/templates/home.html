@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load render_table from django_tables2 %}
+{% load static %}
+
+{% block content %}
+<div class="section">
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <div class="field is-grouped">
+                <p class="control is-expanded">
+                    {{ form.name }}
+                </p>
+                <p class="control">
+                    <button class="button is-link" type="submit">
+                        Add City
+                    </button>
+                </p>
+            </div>
+            <div class="help is-danger">
+                {{form.name.errors}}
+            </div>
+        </form>
+    </div>
+</div>
+<div class="section">
+    <div class="container">
+        {% if cities %}
+            <div class="columns">
+                <div class="column">
+                    <p class="is-size-4">Weather in cities</p>
+                </div>
+                <div class="column has-text-right">
+                    <a href="/update" class="button" type="submit">Update weather data</a>
+                </div>
+            </div>
+            <hr>
+            <div class="columns is-multiline">
+            {% for city in cities %}
+                <div class="column is-one-third">
+                    <div class="box">
+                      <article class="media">
+                        {% if city.icon %}
+                        <div class="media-left">
+                          <figure class="image">
+                            <img src="http://openweathermap.org/img/w/{{city.icon}}.png">
+                          </figure>
+                        </div>
+                        {% endif %}
+                        <div class="media-content">
+                          <div class="content">
+                            <p>
+                              <span class="title">{{city.name}}</span> {% if city.country %} <small>{{city.country}}</small>{% endif %}
+                              {% if city.icon %}
+                              <br>
+                              <span class="subtitle">{{city.temperature|floatformat:"1"}}&#8451;</span>
+                              <br>
+                              {{city.description}}
+                              {% endif %}
+                          </div>
+                        </div>
+                      </article>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <p class="is-size-4">No cities</p>
+        {% endif %}
+
+
+        <div class="columns">
+                <div class="column">
+                    <p class="is-size-4">Products to synchronize</p>
+                </div>
+                <div class="column has-text-right">
+                    <a href="/wfirma" class="button" type="submit">Update products from Wfirma</a>
+                </div>
+        </div>
+        <hr>
+        {% comment %} <div class="columns is-multiline">
+            
+        </div> {% endcomment %}
+        {% render_table products %}
+
+    </div>
+</div>
+{% endblock %}
