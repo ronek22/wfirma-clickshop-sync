@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+import dbsettings
 
 class City(models.Model):
     name = models.CharField(max_length=64, unique=True)
@@ -33,4 +34,15 @@ class Shop(models.Model):
     
     def __str__(self):
         return self.url
+
+class Credentials(models.Model):
+    login = models.CharField(max_length=200)
+    password = models.CharField(max_length=40)
+
+    def get_absolute_url(self):
+        return reverse("credentials", kwargs={"pk": self.pk})
+    
+    def __str__(self):
+        return self.login
+
     

@@ -25,4 +25,4 @@ services:
   celerybeat:
     <<: *django
     ports: []
-    command: celery -A synchro beat -l INFO
+    command: celery -A synchro beat -l INFO --pidfile= --scheduler django_celery_beat.schedulers:DatabaseScheduler

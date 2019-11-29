@@ -15,6 +15,7 @@ django-tables2 = "*"
 django-bootstrap4 = "*"
 django-filter = "*"
 django-celery-beat = "*"
+django-dbsettings = "*"
 
 [requires]
 python_version = "3.7"

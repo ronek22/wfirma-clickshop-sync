@@ -7,8 +7,8 @@ from django.views import generic
 
 
 from .forms import CityForm
-from .models import City, Product
-from .tasks import get_weather_data, get_wfirma_products
+from .models import City, Product, Credentials
+from .tasks import get_wfirma_products
 from .tables import ProductTable
 from .filters import ProductFilter
 
@@ -16,6 +16,7 @@ from django_tables2 import SingleTableView, SingleTableMixin
 from django_filters.views import FilterView
 from synchro.models import Shop
 from synchro.tables import ShopTable
+from django import forms
 
 # Create your views here.
 
@@ -54,19 +55,6 @@ class SettingsView(SingleTableView):
     template_name = 'settings.html'
     
 
-class UpdateView(generic.View):
-
-    def get(self, request, *args, **kwargs):
-
-        cities = City.objects.all()
-        for city in cities:
-            get_weather_data.delay(city.name)
-
-        messages.add_message(request, messages.INFO,
-                             'Weather update task started.')
-        return HttpResponseRedirect(reverse('home'))
-
-update_view = UpdateView.as_view()
 
 class WfirmaUpdateView(generic.View):
 
@@ -104,3 +92,14 @@ class ShopDetailView(generic.DetailView):
 class ShopDeleteView(generic.DeleteView):
     model = Shop
     success_url = reverse_lazy('home')
+
+class CredentialsUpdateView(generic.UpdateView):
+    model = Credentials
+    fields=['login', 'password']
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = super(CredentialsUpdateView, self).get_form(form_class)
+        form.fields['password'].widget = forms.PasswordInput()
+        return form

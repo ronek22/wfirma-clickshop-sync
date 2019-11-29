@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 USE_TZ = False
-
+DBSETTINGS_USE_SITES = False
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'bootstrap4',
     'django_filters',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
