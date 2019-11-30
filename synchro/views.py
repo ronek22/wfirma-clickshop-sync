@@ -8,7 +8,7 @@ from django.views import generic
 
 from .forms import CityForm
 from .models import City, Product, Credentials
-from .tasks import get_wfirma_products
+from .tasks import get_wfirma_products, authenticate_shop, synchronize
 from .tables import ProductTable
 from .filters import ProductFilter
 
@@ -18,32 +18,13 @@ from synchro.models import Shop
 from synchro.tables import ShopTable
 from django import forms
 
-# Create your views here.
 
-
-# class HomeView(generic.CreateView):
-#     template_name = 'home2.html'
-#     model = City
-#     form_class = CityForm
-#     success_url = reverse_lazy('home')
-
-#     def get_context_data(self, *args, **kwargs):
-#         context = super().get_context_data(*args, **kwargs)
-#         context['cities'] = City.objects.order_by('name').all()
-#         context['products'] = Product.objects.order_by('name').all()
-#         return context
-
-#     def post(self, request, *args, **kwargs):
-#         result = super().post(request, *args, **kwargs)
-#         city = request.POST['name']
-#         if city:
-#             get_weather_data(city)
-#         return result
 
 class HomeView(SingleTableMixin, FilterView):
     model = Product
     table_class = ProductTable
     template_name = 'home2.html'
+    table_pagination = { "per_page": 10}
 
     filterset_class = ProductFilter
 
@@ -68,6 +49,27 @@ class WfirmaUpdateView(generic.View):
 
 wfirma_update_view = WfirmaUpdateView.as_view()
 
+class ClickShopUpdateView(generic.View):
+    
+    def get(self, request, *args, **kwargs):
+        
+        authenticate_shop.delay()
+        messages.add_message(request, messages.INFO,
+            'Shop autentication started')
+        
+        return HttpResponseRedirect(reverse('home'))
+
+class SynchronizeView(generic.View):
+    
+    def get(self, request, *args, **kwargs):
+    
+        synchronize.delay()
+        messages.add_message(request, messages.INFO,
+            'Synchronization started')
+        
+        return HttpResponseRedirect(reverse('home'))
+
+
 def change_status(request, pk):
     query = Product.objects.get(id=pk)
     query.enabled = not query.enabled
@@ -77,6 +79,10 @@ def change_status(request, pk):
 def shop_delete(request, pk):
     query = Shop.objects.get(id=pk)
     query.delete()
+    return HttpResponseRedirect(reverse('home'))
+
+def product_delete_all(request):
+    Product.objects.all().delete()
     return HttpResponseRedirect(reverse('home'))
 
 class ShopCreateView(generic.CreateView):
@@ -103,3 +109,7 @@ class CredentialsUpdateView(generic.UpdateView):
         form = super(CredentialsUpdateView, self).get_form(form_class)
         form.fields['password'].widget = forms.PasswordInput()
         return form
+
+    def get_success_url(self):
+        
+        return reverse('home')

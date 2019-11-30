@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-import dbsettings
+from django.core.exceptions import ValidationError
 
 class City(models.Model):
     name = models.CharField(max_length=64, unique=True)
@@ -41,6 +41,11 @@ class Credentials(models.Model):
 
     def get_absolute_url(self):
         return reverse("credentials", kwargs={"pk": self.pk})
+
+    def save(self, *args, **kwargs):
+        if not self.pk and Credentials.objects.exists():
+            raise ValidationError('There is can be only one Credential in entire site')
+        return super(Credentials, self).save(*args, **kwargs) 
     
     def __str__(self):
         return self.login

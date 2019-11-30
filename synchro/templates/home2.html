@@ -10,16 +10,30 @@
         <h2>Produkty do synchronizacji</h2>
     </div>
     <div class="col-md-2 col-sm-12">
-        <a href="/wfirma" class="btn btn-primary pull-right" >Aktualizuj z Wfirmy</a>
+        <a href="/sync" class="btn btn-success pull-right" onclick="return confirm('Jesteś pewny? Polecam stosować przy wylączonym harmonogramie :)')">Synchronizuj</a>
     </div>
-</div><hr>
+
+</div>
+<hr>
 {% if filter %}
-    <form action="" method="get" class="form form-inline">
-        {% bootstrap_form filter.form layout='inline' %}
-        {% bootstrap_button 'Szukaj' %}
-    </form>
+<div class="row justify-content-end">
+    <div class="col-md-8 col-sm-12">
+        <form action="" method="get" class="form form-inline">
+            {% bootstrap_form filter.form layout='inline' %}
+            {% bootstrap_button 'Szukaj' %}
+        </form>
+    </div>
+
+    <div class="col-md-2 col-sm-12 pull-right">
+                <a href="/wfirma" class="btn btn-primary">Aktualizuj z Wfirmy</a>
+    </div>
+
+    <div class="col-md-2 col-sm-12">
+            <a href="/product/delete_all" class="btn btn-danger" onclick="return confirm('Jesteś pewny? Wyzeruje to pobrane dane z Wfirmy\nUżyj jeśli zmieniłeś konto wfirmy')" >Wyczyść tabele</a>
+</div>
+</div>
 {% endif %}
-    {% render_table table %}
 
+
+{% render_table table %}
 {% endblock %}
-
