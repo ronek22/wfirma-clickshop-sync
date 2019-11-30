@@ -7,13 +7,25 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/app
+      # - ./static:/static
     ports:
-      - "8000:8000"
+      - "8080:8080"
     # env_file: .env
     depends_on:
       - redis
       - db
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && gunicorn --bind 0.0.0.0:8080 djsync.wsgi"
+  
+  nginx:
+    image: "nginx"
+    restart: always
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./static:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - django
 
   redis:
     image: redis:latest

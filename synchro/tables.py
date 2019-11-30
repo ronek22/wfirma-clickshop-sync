@@ -16,7 +16,9 @@ class ProductTable(tables.Table):
         row_attrs = {
             'data-enabled': lambda record: record.enabled
         }
-        fields = {'name', 'available', 'modified'}
+        exclude = ('enabled',)
+        sequence = ('id','name', 'available', 'modified')
+        order_by = 'id'
         empty_text = "Brak produktów, spróbuj połączyć z WFirma"
 
 

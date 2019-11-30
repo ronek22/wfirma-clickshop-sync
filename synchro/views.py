@@ -4,6 +4,8 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.urls import reverse_lazy
 from django.views import generic
+from django.db import connection
+from django.core.management.color import no_style
 
 
 from .forms import CityForm
@@ -83,6 +85,10 @@ def shop_delete(request, pk):
 
 def product_delete_all(request):
     Product.objects.all().delete()
+    sequence_sql = connection.ops.sequence_reset_sql(no_style(), [Product])
+    with connection.cursor() as cursor:
+        for sql in sequence_sql:
+            cursor.execute(sql)
     return HttpResponseRedirect(reverse('home'))
 
 class ShopCreateView(generic.CreateView):
