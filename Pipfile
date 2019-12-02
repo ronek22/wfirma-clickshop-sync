@@ -17,6 +17,7 @@ django-filter = "*"
 django-celery-beat = "*"
 django-dbsettings = "*"
 dataclasses-json = "*"
+ratelimiter = "*"
 
 [requires]
 python_version = "3.7"

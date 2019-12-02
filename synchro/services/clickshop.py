@@ -75,6 +75,11 @@ class ClickShopClient:
         payload = product.to_json()
         response = requests.put(f"{self.url}/products/{product.product_id}", data=product.to_json(), headers=headers)
         print(f"STATUS OF UPDATE: {response.status_code}")
+        if response.status_code == 429:
+            print("="*20)
+            print(f"PROBLEM: {response.content}")
+            print("-"*20)
+            print(f"HEADERS: {response.headers}")
 
 
 

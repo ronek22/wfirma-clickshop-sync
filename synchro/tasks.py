@@ -7,6 +7,7 @@ from synchro.services.wfirma import WFirmaClient
 from synchro.services.clickshop import ClickShopClient
 import http.client
 from datetime import datetime
+import operator
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -41,10 +42,10 @@ def authenticate_shop():
 @task
 def synchronize():
     # update wfirma database
-    credentials = Credentials.objects.all().first()
-    username, password = credentials.login, credentials.password
-    client = WFirmaClient(username, password)
-    client.get_all_goods()
+    # credentials = Credentials.objects.all().first()
+    # username, password = credentials.login, credentials.password
+    # client = WFirmaClient(username, password)
+    # client.get_all_goods()
 
     products_to_sync = Product.objects.all().filter(enabled=True)
 
@@ -57,10 +58,16 @@ def synchronize():
         product_sync = [x for x in products_to_sync if x.code in [y.code for y in products_in_shop]]
         products_in_shop = [x for x in products_in_shop if x.code in [y.code for y in product_sync]]
 
+        print(f"[DEBUG] Sklep: {len(products_in_shop)} | WFIRMA: {len(product_sync)}")
+        keyfun = operator.attrgetter("code") 
+        product_sync.sort(key=keyfun, reverse=True)
+        products_in_shop.sort(key=keyfun, reverse=True)  
+
         for firma,clickshop in zip(product_sync, products_in_shop):
             print(f"{firma.name} -> {clickshop.translations['pl_PL']['name']}")
+            # print(f"{firma.code} -> {clickshop.code}")
             if int(firma.available) != int(clickshop.stock.stock):
-                print(f"[UPDATE] Different stock: {firma.available} != {clickshop.stock.stock}")
+                print(f"[UPDATE] Different stock: {int(firma.available)} != {int(clickshop.stock.stock)}")
                 clickshop.stock.stock = int(firma.available)
                 click.put_product(clickshop)
 
