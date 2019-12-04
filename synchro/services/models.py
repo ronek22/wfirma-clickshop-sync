@@ -72,3 +72,4 @@ class ClickProduct:
     ean:str
     stock:Stock
     translations:str
+    options:List[int]

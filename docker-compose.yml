@@ -13,6 +13,7 @@ services:
     depends_on:
       - redis
       - db
+      - hub
     command: python manage.py runserver 0.0.0.0:8000
 
   redis:
@@ -30,3 +31,15 @@ services:
 
   db:
     image: postgres
+
+  hub:
+    image: selenium/hub:3.141.59
+    ports:
+      - 4444:4444
+    
+  chrome:
+    image: selenium/node-chrome:3.141.59
+    depends_on:
+      - hub
+    environment:
+      - HUB_HOST=hub

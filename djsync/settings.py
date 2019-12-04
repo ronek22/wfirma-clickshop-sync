@@ -25,7 +25,7 @@ SECRET_KEY = 's78-y_vokrc8$se*@$wja&%q5xh8)!#kq3*&gf9#d%!oynwu*s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['ronek.live', 'django', 'localhost']
+ALLOWED_HOSTS = ['*']
 USE_TZ = False
 DBSETTINGS_USE_SITES = False
 # Application definition

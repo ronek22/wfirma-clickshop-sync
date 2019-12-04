@@ -80,6 +80,15 @@ class ClickShopClient:
             print(f"PROBLEM: {response.content}")
             print("-"*20)
             print(f"HEADERS: {response.headers}")
+            sleep(1)
+            print("RETRY")
+            return self.put_product(product)
+        elif response.status_code != 200:
+            print("="*20)
+            print(f"PROBLEM: {response.content}")
+            print("-"*20)
+            print(f"HEADERS: {response.headers}")
+
 
 
 

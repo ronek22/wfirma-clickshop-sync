@@ -47,6 +47,7 @@ class WFirmaClient:
     def get_all_goods(self):
         page, products = 1, self.get_goods()
         while products:
+            print(f"[DEBUG] WFIRMA Page: {page}")
             page+=1
             products = self.get_goods(page=page)
                 

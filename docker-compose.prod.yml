@@ -14,6 +14,7 @@ services:
     depends_on:
       - redis
       - db
+      - hub
     command: bash -c "python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && gunicorn --bind 0.0.0.0:8080 djsync.wsgi"
   
   nginx:
@@ -42,3 +43,15 @@ services:
 
   db:
     image: postgres
+
+  hub:
+    image: selenium/hub:3.141.59
+    ports:
+      - 4444:4444
+    
+  chrome:
+    image: selenium/node-chrome:3.141.59
+    depends_on:
+      - hub
+    environment:
+      - HUB_HOST=hub
