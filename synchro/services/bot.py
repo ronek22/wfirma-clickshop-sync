@@ -10,6 +10,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import StaleElementReferenceException
 import os
 import socket
+from retry import retry
 
 DEBUG = False
 
@@ -45,16 +46,24 @@ class Bot:
         
         self.quickWait.until(ec.url_changes(current))
 
+    @retry(StaleElementReferenceException, tries=3, delay=1)
+    def _get_data(self, local):
+        data = self.wait.until(ec.visibility_of_element_located(local))
+        return data.get_attribute('value')
+
+    @retry(StaleElementReferenceException, tries=3, delay=1)
+    def _fill_data(self, local, value):
+        data = self.wait.until(ec.visibility_of_element_located(local))
+        data.clear()
+        data.send_keys(value)
+        return data
+
 
     def edit_variant(self, id):
         endpoint = f"{self.url}products/editoption/id/{id}/stock/1"
         self.driver.get(endpoint)
-        code = self.wait.until(ec.visibility_of_element_located((By.NAME, 'code')))
-        try:
-            code = code.get_attribute('value')
-        except StaleElementReferenceException:
-            code = self.wait.until(ec.visibility_of_element_located((By.NAME, 'code')))
-            code = code.get_attribute('value')
+
+        code = self._get_data((By.NAME, 'code'))
 
         if code:
             corresponding = next((x for x in self.productsList if x.code == code), None)
@@ -62,8 +71,7 @@ class Bot:
             if corresponding:
                 print(f"[DEBUG] ID: {id} CODE: {corresponding.code} FOUND CORRESPONDING FOR: {corresponding.name} -> {corresponding.available}")
                 value = int(corresponding.available)
-                stan = self.wait.until(ec.visibility_of_element_located((By.NAME, 'optstock')))
-                stan.clear(); stan.send_keys(value)
+                stan = self._fill_data((By.NAME, 'optstock'), value)
                 self.wait.until(lambda browser: stan.get_attribute('value') == str(value))
 
                 save_button = self.wait.until(ec.visibility_of_element_located((By.NAME, 'savenquit'))).click()

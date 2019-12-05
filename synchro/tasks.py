@@ -49,7 +49,7 @@ def synchronize():
     client = WFirmaClient(username, password)
     client.get_all_goods()
 
-    rate_limiter = RateLimiter(max_calls=10, period=1)
+    rate_limiter = RateLimiter(max_calls=3, period=1)
     products_to_sync = Product.objects.all().filter(enabled=True)
 
     shops = Shop.objects.all()

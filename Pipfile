@@ -20,6 +20,7 @@ dataclasses-json = "*"
 ratelimiter = "*"
 selenium = "*"
 webdriver_manager = "*"
+retry = "*"
 
 [requires]
 python_version = "3.7"
