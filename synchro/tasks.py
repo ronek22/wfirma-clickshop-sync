@@ -56,6 +56,7 @@ def synchronize():
 
     for shop in shops:
         click = ClickShopClient(shop)
+        print(f"[INFO] SHOP: {shop.url}")
         products_in_shop = click.get_all_products()
         products_variants = [x for x in products_in_shop if x.options]
         variants = []
