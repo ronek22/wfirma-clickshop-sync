@@ -13,8 +13,8 @@ class City(models.Model):
         return self.name
 
 class Product(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    code = models.CharField(max_length=50)
+    name = models.CharField(max_length=100, unique=False)
+    code = models.CharField(max_length=50, unique=True)
     available = models.FloatField()
     modified = models.DateTimeField(null=True, blank=True)
     enabled = models.BooleanField(default=True)

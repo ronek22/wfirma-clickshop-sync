@@ -50,7 +50,7 @@ def synchronize():
     client.get_all_goods()
 
     rate_limiter = RateLimiter(max_calls=3, period=1)
-    products_to_sync = Product.objects.all().filter(enabled=True)
+    products_to_sync = Product.objects.all().filter(enabled=True).exclude(code__exact='')
 
     shops = Shop.objects.all()
 
@@ -63,6 +63,7 @@ def synchronize():
         for product in products_variants:
             variants.extend(product.options)
 
+        # TODO: SOMETHING GOES WRONG HERE MY MAN !!!
 
         product_sync = [x for x in products_to_sync if x.code in [y.code for y in products_in_shop]]
         products_in_shop = [x for x in products_in_shop if x.code in [y.code for y in product_sync]]
@@ -78,7 +79,7 @@ def synchronize():
 
         for firma, clickshop in pairs:
             with rate_limiter:
-                print(f"{firma.name} -> {clickshop.translations['pl_PL']['name']}")
+                print(f"{firma.name}:{firma.code} -> {clickshop.code}:{clickshop.translations['pl_PL']['name']}")
                 clickshop.stock.stock = int(firma.available)
                 click.put_product(clickshop)
 
@@ -88,6 +89,7 @@ def synchronize():
         for index, variant in enumerate(variants):
             print(f"[INFO] {index}/{length}")
             bot.edit_variant(variant)
+        bot.close()
 
 
 

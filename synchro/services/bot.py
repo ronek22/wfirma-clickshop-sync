@@ -23,15 +23,20 @@ class Bot:
         #     self.driver = webdriver.Chrome(options=options, executable_path=ChromeDriverManager().install())
         # else:
         #     self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install())
+        
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-gpu')
         self.driver = webdriver.Remote(command_executor=f'http://hub:4444/wd/hub',
-        desired_capabilities=DesiredCapabilities.CHROME)
+        desired_capabilities=options.to_capabilities())
         self.url = f"{url}/admin/"
         self.login = login
         self.password = password
         self.productsList = productsList
         self.ignoredExceptions = (StaleElementReferenceException,)
-        self.wait = WebDriverWait(self.driver, 60, ignored_exceptions=self.ignoredExceptions)
-        self.quickWait = WebDriverWait(self.driver, 10, ignored_exceptions=self.ignoredExceptions)
+        self.wait = WebDriverWait(self.driver, 120, ignored_exceptions=self.ignoredExceptions)
+        self.quickWait = WebDriverWait(self.driver, 30, ignored_exceptions=self.ignoredExceptions)
         self._login()
 
     def _login(self):

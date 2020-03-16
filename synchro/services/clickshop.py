@@ -88,6 +88,7 @@ class ClickShopClient:
             print(f"PROBLEM: {response.content}")
             print("-"*20)
             print(f"HEADERS: {response.headers}")
+            print(f"Product options: {product.to_json()}") # test
 
 
 

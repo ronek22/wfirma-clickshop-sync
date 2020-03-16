@@ -35,9 +35,9 @@ class WFirmaClient:
             return False
         for index, prod in response.items():
             product, created = Product.objects.update_or_create(
-                name=prod['good']['name'],
+                code=prod['good']['code'],
                 defaults = {
-                    'code': prod['good']['code'],
+                    'name': prod['good']['name'],
                     'available': prod['good']['available'],
                     'modified': prod['good']['modified']
                 }

@@ -4,10 +4,10 @@ from .models import Product, Shop
 class ProductTable(tables.Table):
 
     # onclick="return confirm('Are you sure? {{record.id}}')"
-    code = '''
+    change = '''
     <a href="/change_status/{{record.id}}" class="btn btn-sm btn-info">Switch</a>'''
 
-    change = tables.TemplateColumn(template_code=code,verbose_name='Change',)
+    change = tables.TemplateColumn(template_code=change,verbose_name='Change',)
 
 
     class Meta:
@@ -17,7 +17,7 @@ class ProductTable(tables.Table):
             'data-enabled': lambda record: record.enabled
         }
         exclude = ('enabled',)
-        sequence = ('id','name', 'available', 'modified')
+        sequence = ('id','name','code','available', 'modified')
         order_by = 'id'
         empty_text = "Brak produktów, spróbuj połączyć z WFirma"
 
